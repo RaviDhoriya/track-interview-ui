@@ -34,6 +34,9 @@ function App() {
         <Route path="/job-add">
           <JobCMS/>
         </Route>
+        <Route path="/job-edit/:job_id">
+          <JobCMS/>
+        </Route>
         <Route path="/">
           <Home/>
         </Route>

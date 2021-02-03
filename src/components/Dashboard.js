@@ -10,13 +10,27 @@ const Dashboard = ()=>{
     const getMyJobs=()=>{
         Api.getMyJobs((data)=>{
             if(data.status){
-                console.log(data);
+                //console.log(data);
                 setJobs(data.data);
             }else{
                 console.error("Failed to load My Jobs");
             }
         });
     };
+    const deleteJob=(job)=>{
+        if(window.confirm(`Do you want to delete job "${job.name} - ${job.company}?`)){
+            var params={};
+            params.job_id=job._id;
+            Api.deleteJob(params,(data)=>{
+                if(data.status){
+                    var newJobs=jobs.filter((e)=>{
+                        return e._id!==job._id
+                    });
+                    setJobs(newJobs);
+                }
+            });
+        }
+    }
     useEffect(()=>{
         getMyJobs();
     },[]);
@@ -38,13 +52,13 @@ const Dashboard = ()=>{
                     </thead>
                     <tbody>
                     {jobs.map((job,index)=>{
-                        return (<tr>
+                        return (<tr key={job._id}>
                             <td>{index+1}</td>
-                            <td>{job.name}</td>
+                            <td><Link to={`/job/${job._id}`}>{job.name}</Link></td>
                             <td>{job.company}</td>
                             <td>{job.status}</td>
                             <td>{job.applied}</td>
-                            <td>View | Edit | Delete</td>
+                            <td><Button as={Link} to={`/job-edit/${job._id}`}>Edit</Button> <Button variant="danger" onClick={(e)=>deleteJob(job)}>Delete</Button></td>
                         </tr>);
                     })}
                     </tbody>

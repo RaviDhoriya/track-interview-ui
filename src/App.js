@@ -8,7 +8,12 @@ import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import JobCMS from './components/JobCMS';
+import Job from "./components/Job";
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
 
+TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(en);
 
 function App() {
   return (
@@ -36,6 +41,9 @@ function App() {
         </Route>
         <Route path="/job-edit/:job_id">
           <JobCMS/>
+        </Route>
+        <Route path="/job/:job_id">
+          <Job/>
         </Route>
         <Route path="/">
           <Home/>

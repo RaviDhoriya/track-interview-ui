@@ -20,6 +20,8 @@ const JobCMS = () => {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [jobURL, setJobURL] = useState("");
+  const [reviewURL, setReviewURL] = useState("");
+  const [linkedinURL, setLinkedinURL] = useState("");
   const [source, setSource] = useState("");
   const [skills, setSkills] = useState([]);
   const [location, setLocation] = useState("");
@@ -37,6 +39,8 @@ const JobCMS = () => {
     body.name = name;
     body.company = company;
     body.job_url = jobURL;
+    body.review_url = reviewURL;
+    body.linkedin_url = linkedinURL;
     body.source = source;
     body.skills = skills;
     body.location = location;
@@ -76,6 +80,8 @@ const JobCMS = () => {
           setName(data.name);
           setCompany(data.company);
           setJobURL(data.job_url);
+          setReviewURL(data.review_url);
+          setLinkedinURL(data.linkedin_url);
           setSource(data.source);
           setSkills(data.skills);
           setLocation(data.location);
@@ -133,6 +139,31 @@ const JobCMS = () => {
               />
             </FormGroup>
           </Col>
+          <Col>
+            <FormGroup>
+              <FormLabel>LinkedIn URL</FormLabel>
+              <FormControl
+                type="text"
+                placeholder="Enter LinkedIn URL"
+                value={linkedinURL}
+                onChange={(e) => setLinkedinURL(e.target.value)}
+              />
+            </FormGroup>
+          </Col>
+          <Col>
+            <FormGroup>
+              <FormLabel>
+                Review URL <small>(eg. Glassdoor)</small>
+              </FormLabel>
+              <FormControl
+                type="url"
+                placeholder="Enter Review URL"
+                value={reviewURL}
+                onChange={(e) => setReviewURL(e.target.value)}
+              />
+            </FormGroup>
+          </Col>
+
           <Col>
             <FormGroup>
               <FormLabel>Source</FormLabel>
@@ -252,15 +283,20 @@ const JobCMS = () => {
             >
               Save
             </Button>
-            <Button variant="secondary" onClick={()=>history.goBack()}>
+            <Button variant="secondary" onClick={() => history.goBack()}>
               Cancel
             </Button>
           </Col>
         </Row>
         <Row>
           <Col>
-            <br/>
-            <Alert show={alert.msg!==""} variant={alert.variant} dismissible onClose={()=>setAlert({msg:"",variant:""})}>
+            <br />
+            <Alert
+              show={alert.msg !== ""}
+              variant={alert.variant}
+              dismissible
+              onClose={() => setAlert({ msg: "", variant: "" })}
+            >
               {alert.msg}
             </Alert>
           </Col>

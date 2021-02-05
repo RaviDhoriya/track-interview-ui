@@ -74,4 +74,46 @@ Api.deleteJob=(body,callback)=>{
         callback({status:false,message:"Failed to delete Job",error:err});
     }
 }
+Api.newActivity=(body,callback)=>{
+    try{
+        var obj={};
+        obj.headers=Api.headers();
+        obj.method="POST";
+        obj.body=JSON.stringify(body);
+        fetch(Api.BASE+"/api/activities",obj)
+            .then(response=> response.json())
+            .then(json=>callback(json));
+    }
+    catch(err){
+        callback({status:false,message:"Failed to add activity",error:err});
+    }
+}
+Api.editActivity=(body,callback)=>{
+    try{
+        var obj={};
+        obj.headers=Api.headers();
+        obj.method="PUT";
+        obj.body=JSON.stringify(body);
+        fetch(Api.BASE+"/api/activities",obj)
+            .then(response=> response.json())
+            .then(json=>callback(json));
+    }
+    catch(err){
+        callback({status:false,message:"Failed to edit activity",error:err});
+    }
+}
+Api.deleteActivity=(body,callback)=>{
+    try{
+        var obj={};
+        obj.headers=Api.headers();
+        obj.method="DELETE";
+        obj.body=JSON.stringify(body);
+        fetch(Api.BASE+"/api/activities",obj)
+            .then(response=> response.json())
+            .then(json=>callback(json));
+    }
+    catch(err){
+        callback({status:false,message:"Failed to delete activity",error:err});
+    }
+}
 export default Api;

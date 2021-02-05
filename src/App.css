@@ -28,7 +28,7 @@
     color:#666;
 }
 .activity-body{
-    padding:0px 5px 5px 5px;
+    padding:5px 5px 5px 5px;
 }
 .jumbotron{
     margin-bottom:0px;
@@ -43,4 +43,8 @@
 }
 .activity-box:hover .activity-buttons{
     display: block;
+}
+.activity-head{
+    background:#eee;
+    font-size:13px;
 }

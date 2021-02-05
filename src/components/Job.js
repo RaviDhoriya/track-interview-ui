@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Jumbotron,Button, Modal } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Container, Row, Col, Jumbotron, Button, Modal } from "react-bootstrap";
+import { useParams,Link } from "react-router-dom";
 import Api from "../config/Api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import {
-    faEdit,
+  faEdit,
   faExternalLinkSquareAlt,
+  faPlus,
   faStar,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import ReactTimeAgo from "react-time-ago";
+import ActivityModal from "./ActivityModal";
 
 const Job = () => {
   const { job_id } = useParams();
   const [job, setJob] = useState({ skills: [], activities: [] });
+  const activityModal = useRef();
 
   const getJobDetails = () => {
     Api.getJobDetails(job_id, (resp) => {
       if (resp.status) {
-        console.log(resp.data);
         setJob(resp.data);
       }
     });
@@ -28,6 +30,23 @@ const Job = () => {
   useEffect(() => {
     getJobDetails();
   }, []);
+  const parentCallback=()=>{
+    getJobDetails();
+  };
+  const deleteActivity=(activity)=>{
+    if(window.confirm("Do you want to delete this activity?")){
+      var params={};
+      params.activity_id=activity._id;
+      Api.deleteActivity(params,(data)=>{
+          if(data.status){
+              var newActivities=job.activities.filter((e)=>{
+                  return e._id!==activity._id
+              });
+              setJob({...job,activities:newActivities});
+          }
+      });
+    }
+  };
   return (
     <Container>
       <hr />
@@ -68,19 +87,61 @@ const Job = () => {
         </Col>
       </Row>
       <Row>
+        <Col>
+          <div className="activity-add">
+            <Button
+              variant="success"
+              className="float-right"
+              onClick={() => activityModal.current.showModal(null)}
+            >
+              <FontAwesomeIcon icon={faPlus} /> New Activity
+            </Button>
+            <Button
+              as={Link}
+              variant="warning"
+              className="float-right mr-3"
+              to={`/job-edit/${job._id}`}
+
+            >
+              <FontAwesomeIcon icon={faEdit} /> Edit
+            </Button>
+            <ActivityModal job={job} ref={activityModal} parentCallback={parentCallback}/>
+          </div>
+        </Col>
+      </Row>
+      <Row>
         <Col className="activity-list">
           {job.activities.map((activity, index) => {
             return (
-              <div className="activity-box">
+              <React.Fragment key={index}>
+                <div className="activity-box" >
                   <div className="activity-buttons">
-                      <Button variant="danger" size="sm"><FontAwesomeIcon icon={faTrash}/></Button>{"  "}
-                      <Button variant="warning" size="sm"><FontAwesomeIcon icon={faEdit}/></Button>
+                    <Button variant="danger" size="sm" onClick={()=>{ deleteActivity(activity)}}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </Button>
+                    {"  "}
+                    <Button
+                      variant="warning"
+                      size="sm"
+                      onClick={() => activityModal.current.showModal(activity)}
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Button>
                   </div>
-                <div className="activity-head">
-                  { `${new Date(activity.stamp).toLocaleDateString()} ${new Date(activity.stamp).toLocaleTimeString()}`} <ReactTimeAgo date={activity.stamp} locale="en-US" />
+                  <div className="activity-head">
+                    {`${new Date(
+                      activity.stamp
+                    ).toLocaleDateString()} ${new Date(
+                      activity.stamp
+                    ).toLocaleTimeString()}`}{" "}
+                    <ReactTimeAgo
+                      date={new Date(activity.stamp)}
+                      locale="en-US"
+                    />
+                  </div>
+                  <div className="activity-body">{activity.body}</div>
                 </div>
-                <div className="activity-body">{activity.body}</div>
-              </div>
+              </React.Fragment>
             );
           })}
         </Col>

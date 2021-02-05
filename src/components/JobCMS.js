@@ -11,6 +11,8 @@ import {
   Alert,
 } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import Api from "../config/Api";
 
@@ -31,6 +33,7 @@ const JobCMS = () => {
   const [HRName, setHRName] = useState("");
   const [HREmail, setHREmail] = useState("");
   const [HRPhone, setHRPhone] = useState("");
+  const [appliedDate, setAppliedDate] = useState(new Date());
 
   const [alert, setAlert] = useState({ msg: "", variant: "" });
 
@@ -48,7 +51,12 @@ const JobCMS = () => {
     body.ctc_max = maxCTC;
     body.notes = notes;
     body.hr = { name: HRName, email: HREmail, phone: HRPhone };
-    body.applied = new Date().toString();
+    if(appliedDate==="" || appliedDate===undefined){
+      body.applied = null;
+    }else{
+      body.applied = appliedDate.toString();
+    }
+    
     if (job_id) {
       body.job_id = job_id;
       Api.editJob(body, (response) => {
@@ -91,6 +99,7 @@ const JobCMS = () => {
           setHRName(data.hr.name);
           setHREmail(data.hr.email);
           setHRPhone(data.hr.phone);
+          setAppliedDate(new Date(data.applied));
         } else {
           console.error("Job not found.");
           job_id = undefined;
@@ -101,7 +110,7 @@ const JobCMS = () => {
 
   return (
     <Container>
-      <h3>Create New Job</h3>
+      <h3>{job_id === undefined ? "Create New Job" : "Edit Job details"}</h3>
       <Form>
         <Row>
           <Col>
@@ -116,15 +125,31 @@ const JobCMS = () => {
             </FormGroup>
           </Col>
           <Col>
-            <FormGroup>
-              <FormLabel>Company</FormLabel>
-              <FormControl
-                type="text"
-                placeholder="Enter Company Name"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-              />
-            </FormGroup>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <FormLabel>Company</FormLabel>
+                  <FormControl
+                    type="text"
+                    placeholder="Enter Company Name"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col>
+                <FormGroup>
+                  <FormLabel>Applied On</FormLabel>
+                  <ReactDatePicker
+                    as={FormControl}
+                    selected={appliedDate}
+                    onChange={(dt) =>
+                      setAppliedDate(dt)
+                    }
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
           </Col>
         </Row>
         <Row>

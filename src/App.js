@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useState } from "react";
 import { Nav, Navbar, NavbarBrand, NavLink } from "react-bootstrap";
 import NavbarToggle from "react-bootstrap/esm/NavbarToggle";
 import NavbarCollapse from "react-bootstrap/esm/NavbarCollapse";
@@ -11,12 +11,29 @@ import JobCMS from './components/JobCMS';
 import Job from "./components/Job";
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import Login from "./components/Login";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(en);
 
 function App() {
-  return (
+  const isLoggedIn=()=>{
+    return localStorage.getItem("token")||false;
+  };
+  const [isLogged,setIsLogged]=useState(isLoggedIn());
+  
+  const checkLogin=()=>{
+    setIsLogged(isLoggedIn());
+  };
+  const logout=()=>{
+    localStorage.removeItem("token");
+    localStorage.removeItem("data");
+    checkLogin();
+  };
+  if(!isLogged){
+    return (<Login parentCheckLogin={checkLogin}/>);
+  }else
+    return (
     <Router>
       <Navbar>
         <NavbarBrand>Track Interview</NavbarBrand>
@@ -29,6 +46,7 @@ function App() {
             <NavLink as={Link} to="/dashboard">
               Dashboard
             </NavLink>
+            <NavLink onClick={()=>logout()}>Logout</NavLink>
           </Nav>
         </NavbarCollapse>
       </Navbar>

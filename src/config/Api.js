@@ -3,8 +3,40 @@ Api.BASE=process.env.REACT_APP_API_URL;
 
 Api.headers=()=>{
     var headers={'Content-Type':'application/json'};
+    var token=localStorage.getItem("token")||false;
+    if(token){
+        headers.Authorization="Bearer "+token;
+    }
     return headers;
 }
+Api.login=(body,callback)=>{
+    try{
+        var obj={};
+        obj.headers=Api.headers();
+        obj.method="POST";
+        obj.body=JSON.stringify(body);
+        fetch(Api.BASE+"/api/login",obj)
+            .then(response=> response.json())
+            .then(json=>callback(json));
+    }
+    catch(err){
+        callback({status:false,message:"Failed to validate user",error:err});
+    }
+};
+Api.signup=(body,callback)=>{
+    try{
+        var obj={};
+        obj.headers=Api.headers();
+        obj.method="POST";
+        obj.body=JSON.stringify(body);
+        fetch(Api.BASE+"/api/signup",obj)
+            .then(response=> response.json())
+            .then(json=>callback(json));
+    }
+    catch(err){
+        callback({status:false,message:"Failed to register new user",error:err});
+    }
+};
 Api.getMyJobs=(callback)=>{
     try{
         var obj={};

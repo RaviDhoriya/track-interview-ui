@@ -34,6 +34,7 @@ const JobCMS = () => {
   const [HREmail, setHREmail] = useState("");
   const [HRPhone, setHRPhone] = useState("");
   const [appliedDate, setAppliedDate] = useState(new Date());
+  const [status,setStatus]=useState("applied");
 
   const [alert, setAlert] = useState({ msg: "", variant: "" });
 
@@ -51,12 +52,12 @@ const JobCMS = () => {
     body.ctc_max = maxCTC;
     body.notes = notes;
     body.hr = { name: HRName, email: HREmail, phone: HRPhone };
-    if(appliedDate==="" || appliedDate===undefined){
+    if(appliedDate==="" || appliedDate===undefined|| appliedDate===null){
       body.applied = null;
     }else{
       body.applied = appliedDate.toString();
     }
-    
+    body.status=status;
     if (job_id) {
       body.job_id = job_id;
       Api.editJob(body, (response) => {
@@ -100,6 +101,7 @@ const JobCMS = () => {
           setHREmail(data.hr.email);
           setHRPhone(data.hr.phone);
           setAppliedDate(new Date(data.applied));
+          setStatus(data.status);
         } else {
           console.error("Job not found.");
           job_id = undefined;
@@ -107,7 +109,7 @@ const JobCMS = () => {
       });
     }
   }, []);
-
+  const arrStatus=["pending","applied","response","interviewing","waiting","rejected","offer_recieved","decline"];
   return (
     <Container>
       <h3>{job_id === undefined ? "Create New Job" : "Edit Job details"}</h3>
@@ -295,7 +297,13 @@ const JobCMS = () => {
                   />
                 </FormGroup>
               </Col>
-              <Col></Col>
+              <Col>
+              <FormGroup>
+                <FormControl as="select" onChange={(e) => setStatus(e.target.value)}>{arrStatus.map((sts,index)=>{
+                  return <option key={`x${index}`} value={sts} selected={sts===status}>{sts}</option>;
+                })}</FormControl>
+              </FormGroup>
+              </Col>
             </Row>
           </Col>
         </Row>

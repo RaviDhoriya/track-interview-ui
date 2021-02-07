@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 
 const Home = () => {
+  const [user,setUser]=useState(JSON.parse(localStorage.getItem("data")||"{}"));
   return (
     <Container>
-      <h3>Track Interview</h3>
-      Welcome to Track Interview App
+      <h3>Hi {user.name}!</h3>
+      Welcome to Track Interview App!
+  
     </Container>
   );
 };

@@ -51,7 +51,7 @@ function App() {
         </NavbarCollapse>
       </Navbar>
       <Switch>
-        <Route path="/dashboard">
+        <Route path="/dashboard/:job_status?">
           <Dashboard logout={logout}/>
         </Route>
         <Route path="/job-add">

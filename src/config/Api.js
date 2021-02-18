@@ -37,11 +37,25 @@ Api.signup=(body,callback)=>{
         callback({status:false,message:"Failed to register new user",error:err});
     }
 };
-Api.getMyJobs=(callback)=>{
+Api.getJobStats=(callback)=>{
     try{
         var obj={};
         obj.headers=Api.headers();
         obj.method="GET";
+        fetch(Api.BASE+"/api/jobs/stats",obj)
+            .then(response=> response.json())
+            .then(json=>callback(json));
+    }
+    catch(err){
+        callback({status:false,message:"Failed to get Job stats",error:err});
+    }
+}
+Api.getMyJobs=(params,callback)=>{
+    try{
+        var obj={};
+        obj.headers=Api.headers();
+        obj.method="POST";
+        obj.body=JSON.stringify(params);
         fetch(Api.BASE+"/api/jobs",obj)
             .then(response=> response.json())
             .then(json=>callback(json));

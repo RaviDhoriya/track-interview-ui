@@ -1,13 +1,19 @@
 import React,{useEffect,useState} from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import ReactTimeAgo from 'react-time-ago/commonjs/ReactTimeAgo';
 
 import Api from '../config/Api';
 
 const Dashboard = (props)=>{
     var [jobs,setJobs]=useState([]);
+    var {job_status}= useParams();
     const getMyJobs=()=>{
-        Api.getMyJobs((data)=>{
+        let params={};
+        if(job_status){
+            params.filter={status:job_status};
+        }
+        Api.getMyJobs(params,(data)=>{
             if(data.status){
                 setJobs(data.data);
             }else{
@@ -16,6 +22,7 @@ const Dashboard = (props)=>{
             }
         });
     };
+    
     const deleteJob=(job)=>{
         if(window.confirm(`Do you want to delete job "${job.name} - ${job.company}?`)){
             var params={};
@@ -45,7 +52,7 @@ const Dashboard = (props)=>{
                             <td>Position</td>
                             <td>Company</td>
                             <td>Status</td>
-                            <td>Applied</td>
+                            <td>Updated</td>
                             <td>Action</td>
                         </tr>
                     </thead>
@@ -56,7 +63,7 @@ const Dashboard = (props)=>{
                             <td><Link to={`/job/${job._id}`}>{job.name}</Link></td>
                             <td>{job.company}</td>
                             <td>{job.status}</td>
-                            <td>{job.applied}</td>
+                            <td><ReactTimeAgo date={new Date(job.updated)} locale="en-US" /></td>
                             <td><Button as={Link} to={`/job-edit/${job._id}`}>Edit</Button> <Button variant="danger" onClick={(e)=>deleteJob(job)}>Delete</Button></td>
                         </tr>);
                     })}

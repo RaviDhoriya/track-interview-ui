@@ -4,16 +4,15 @@ import { Link } from 'react-router-dom';
 
 import Api from '../config/Api';
 
-const Dashboard = ()=>{
+const Dashboard = (props)=>{
     var [jobs,setJobs]=useState([]);
-
     const getMyJobs=()=>{
         Api.getMyJobs((data)=>{
             if(data.status){
-                //console.log(data);
                 setJobs(data.data);
             }else{
-                console.error("Failed to load My Jobs");
+                //token expired - let's logout. So user can login again.
+                props.logout();
             }
         });
     };

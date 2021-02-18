@@ -52,7 +52,7 @@ function App() {
       </Navbar>
       <Switch>
         <Route path="/dashboard">
-          <Dashboard/>
+          <Dashboard logout={logout}/>
         </Route>
         <Route path="/job-add">
           <JobCMS/>

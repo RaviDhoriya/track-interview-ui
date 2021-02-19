@@ -3,7 +3,7 @@ import { Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Api from "../config/Api";
 
-const Home = () => {
+const Home = (props) => {
   const [user,setUser]=useState(JSON.parse(localStorage.getItem("data")||"{}"));
   const [stats,setStats]=useState([]);
 
@@ -19,7 +19,12 @@ const Home = () => {
 
   var getStats=()=>{
     Api.getJobStats((data)=>{
-      setStats(data.data);
+      if(data.status){
+        setStats(data.data);
+      }else{
+          //token expired - let's logout. So user can login again.
+          props.logout();
+      }
     });
   };
   useEffect(()=>{

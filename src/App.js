@@ -64,7 +64,7 @@ function App() {
           <Job/>
         </Route>
         <Route path="/">
-          <Home/>
+          <Home logout={logout}/>
         </Route>
         
       </Switch>

@@ -54,9 +54,10 @@ Api.getMyJobs=(params,callback)=>{
     try{
         var obj={};
         obj.headers=Api.headers();
-        obj.method="POST";
-        obj.body=JSON.stringify(params);
-        fetch(Api.BASE+"/api/jobs",obj)
+        obj.method="GET";
+        console.log(params);
+        var strParams=Api.objectToURL(params);
+        fetch(Api.BASE+"/api/jobs?"+strParams,obj)
             .then(response=> response.json())
             .then(json=>callback(json));
     }
@@ -161,5 +162,11 @@ Api.deleteActivity=(body,callback)=>{
     catch(err){
         callback({status:false,message:"Failed to delete activity",error:err});
     }
+}
+
+Api.objectToURL=(data)=>{
+    return Object.keys(data).map(function(k) {
+        return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+    }).join('&')
 }
 export default Api;

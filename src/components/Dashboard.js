@@ -11,8 +11,9 @@ const Dashboard = (props)=>{
     const getMyJobs=()=>{
         let params={};
         if(job_status){
-            params.filter={status:job_status};
+            params.status=job_status;
         }
+        
         Api.getMyJobs(params,(data)=>{
             if(data.status){
                 setJobs(data.data);
